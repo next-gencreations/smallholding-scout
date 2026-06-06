@@ -1,234 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smallholding Scout</title>
-  <style>
-    body { margin:0; font-family:Arial,sans-serif; background:#101815; color:#f4f1e8; }
-    header { padding:22px; background:#17241f; border-bottom:1px solid #2f473d; }
-    h1 { margin:0; font-size:28px; }
-    .sub { color:#b8cbbf; margin-top:6px; }
-    .wrap { padding:16px; max-width:900px; margin:auto; }
-    .card { background:#18251f; border:1px solid #345044; border-radius:18px; padding:16px; margin-bottom:14px; box-shadow:0 8px 20px #0005; }
-    label { display:block; margin-top:12px; color:#d7e6dc; font-weight:bold; }
-    input, select, textarea { width:100%; padding:13px; border-radius:12px; border:1px solid #436456; background:#0d1512; color:white; font-size:16px; box-sizing:border-box; }
-    button, a.btn { display:inline-block; border:0; border-radius:14px; padding:13px 15px; margin:6px 4px 0 0; background:#7bcf8c; color:#07120b; font-weight:bold; text-decoration:none; cursor:pointer; }
-    .ghost { background:#26382f; color:#e9fff0; border:1px solid #4d705f; }
-    .danger { background:#d96f6f; }
-    .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .pill { display:inline-block; background:#24372f; padding:7px 10px; border-radius:999px; margin:4px 3px; color:#d7e6dc; }
-    .score { font-size:34px; font-weight:bold; color:#91f29e; }
-    .small { color:#b8cbbf; font-size:14px; }
-    nav { position:sticky; bottom:0; background:#101815; padding:10px; display:flex; gap:8px; border-top:1px solid #2f473d; }
-    nav button { flex:1; padding:12px 6px; }
-    .hidden { display:none; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smallholding Scout</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0d1712;color:#f4f1e8}
+header{padding:18px;background:#17241f;border-bottom:1px solid #2f473d}
+h1{margin:0;font-size:25px}.sub{color:#b8cbbf;margin-top:5px}
+.wrap{padding:14px;max-width:900px;margin:auto}
+.card{background:#18251f;border:1px solid #345044;border-radius:18px;padding:15px;margin-bottom:14px;box-shadow:0 8px 20px #0005}
+label{display:block;margin-top:10px;font-weight:bold;color:#d7e6dc}
+input,select,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #436456;background:#0d1512;color:white;font-size:16px;box-sizing:border-box}
+button,a.btn{display:block;text-align:center;border:0;border-radius:14px;padding:13px;margin:8px 0;background:#7bcf8c;color:#07120b;font-weight:bold;text-decoration:none;cursor:pointer}
+.ghost{background:#26382f;color:#e9fff0;border:1px solid #4d705f}
+.danger{background:#d96f6f;color:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.small{color:#b8cbbf;font-size:14px;line-height:1.4}
+.pill{display:inline-block;background:#24372f;padding:7px 10px;border-radius:999px;margin:4px 3px;color:#d7e6dc}
+.score{font-size:30px;font-weight:bold;color:#91f29e}
+nav{position:sticky;bottom:0;background:#101815;padding:8px;display:flex;gap:6px;border-top:1px solid #2f473d}
+nav button{flex:1;padding:11px 4px;font-size:13px}
+.hidden{display:none}
+.result{border:1px solid #3d5d50;border-radius:14px;padding:12px;margin-top:10px;background:#101c17}
+</style>
 </head>
 <body>
+
 <header>
-  <h1>🏡 Smallholding Scout</h1>
-  <div class="sub">Find land, grazing, woodland, council farms and smallholdings.</div>
+<h1>🏡 Smallholding Scout V2</h1>
+<div class="sub">Scout land, grazing, woodland, council farms and smallholdings.</div>
 </header>
 
 <div class="wrap">
 
-  <section id="searchScreen" class="screen">
-    <div class="card">
-      <h2>Search Area</h2>
-      <label>Postcode</label>
-      <input id="postcode" value="NG19" placeholder="Example: NG19 or DE4" />
+<section id="searchScreen" class="screen">
+<div class="card">
+<h2>Search Area</h2>
 
-      <div class="grid">
-        <div>
-          <label>Radius</label>
-          <select id="radius">
-            <option>10 miles</option>
-            <option>20 miles</option>
-            <option selected>30 miles</option>
-            <option>50 miles</option>
-          </select>
-        </div>
-        <div>
-          <label>Minimum Acres</label>
-          <input id="acres" type="number" value="1" />
-        </div>
-      </div>
+<label>Postcode</label>
+<input id="postcode" value="NG17 7JQ" />
 
-      <label>Max Budget</label>
-      <input id="budget" type="number" value="200000" />
+<div class="grid">
+<div>
+<label>Radius</label>
+<select id="radius">
+<option>10 miles</option>
+<option>20 miles</option>
+<option selected>30 miles</option>
+<option>50 miles</option>
+</select>
+</div>
+<div>
+<label>Minimum Acres</label>
+<input id="acres" type="number" value="4" />
+</div>
+</div>
 
-      <button onclick="buildSearches()">🔍 Build Searches</button>
-    </div>
+<label>Max Budget</label>
+<input id="budget" type="number" value="200000" />
 
-    <div id="searchLinks" class="card hidden"></div>
+<button onclick="runScout()">🔎 Run Scout Search</button>
+<button class="ghost" onclick="openAll()">🚀 Open Key Searches</button>
+</div>
 
-    <div class="card">
-      <h2>Midlands Watch Sources</h2>
-      <p class="small">Derbyshire Council publishes council-owned land/property info and current property for sale/to let pages. Bagshaws specialises in rural property, farms, land and smallholdings. UK Land & Farms and OnTheMarket already list farms/land in Derbyshire/Nottinghamshire. Nottinghamshire also has a county farms estate record. Sources checked today. </p>
-      <p class="small">Sources: Derbyshire Council, Bagshaws, UK Land & Farms, OnTheMarket, Nottinghamshire County Council. 0</p>
-    </div>
-  </section>
+<div id="scoutResults" class="card hidden"></div>
+</section>
 
-  <section id="addScreen" class="screen hidden">
-    <div class="card">
-      <h2>Add Land Manually</h2>
-      <label>Title</label>
-      <input id="title" placeholder="5 acres grazing land" />
+<section id="councilScreen" class="screen hidden">
+<div class="card">
+<h2>🏛️ Council & Public Land Tracker</h2>
+<a class="btn" target="_blank" href="https://www.derbyshire.gov.uk/business/property/estates/our-property-for-sale-or-to-let.aspx">Derbyshire Property For Sale / To Let</a>
+<a class="btn" target="_blank" href="https://www.derbyshire.gov.uk/environment/land-premises/council-land-property/council-land-and-property.aspx">Derbyshire Council Land Records</a>
+<a class="btn" target="_blank" href="https://www.nottinghamshire.gov.uk/business-community/doing-business-with-us/land-and-property">Nottinghamshire Land & Property</a>
+<a class="btn" target="_blank" href="https://www.google.com/search?q=site%3A.gov.uk+Derbyshire+council+farm+tenancy+smallholding">Search Council Farm Tenancies</a>
+<p class="small">Council farms are often listed as tenancies, disposals, farms estate, rural estate or property to let.</p>
+</div>
+</section>
 
-      <label>Location</label>
-      <input id="location" placeholder="Matlock / Mansfield / Ashbourne" />
+<section id="addScreen" class="screen hidden">
+<div class="card">
+<h2>Add Land Manually</h2>
+<label>Title</label><input id="title" placeholder="5 acres grazing land" />
+<label>Location</label><input id="location" placeholder="Matlock / Mansfield / Ashbourne" />
+<div class="grid">
+<div><label>Acres</label><input id="manualAcres" type="number" value="5" /></div>
+<div><label>Price £</label><input id="price" type="number" value="75000" /></div>
+</div>
+<label>Listing Link</label><input id="link" placeholder="Paste listing link" />
+<label>Notes</label><textarea id="notes" rows="4" placeholder="Water, road access, fencing, stables..."></textarea>
+<button onclick="saveLand()">⭐ Save Land</button>
+</div>
+</section>
 
-      <div class="grid">
-        <div>
-          <label>Acres</label>
-          <input id="manualAcres" type="number" value="5" />
-        </div>
-        <div>
-          <label>Price £</label>
-          <input id="price" type="number" value="75000" />
-        </div>
-      </div>
-
-      <label>Listing Link</label>
-      <input id="link" placeholder="Paste Rightmove / agent link" />
-
-      <label>Notes</label>
-      <textarea id="notes" rows="4" placeholder="Water, access, stables, fencing, planning..."></textarea>
-
-      <button onclick="saveLand()">⭐ Save Land</button>
-    </div>
-  </section>
-
-  <section id="watchScreen" class="screen hidden">
-    <div class="card">
-      <h2>⭐ My Watchlist</h2>
-      <div id="watchlist"></div>
-    </div>
-  </section>
+<section id="watchScreen" class="screen hidden">
+<div class="card">
+<h2>⭐ Watchlist</h2>
+<div id="watchlist"></div>
+</div>
+</section>
 
 </div>
 
 <nav>
-  <button onclick="showScreen('searchScreen')">Search</button>
-  <button onclick="showScreen('addScreen')">Add</button>
-  <button onclick="showScreen('watchScreen'); renderWatchlist()">Watchlist</button>
+<button onclick="showScreen('searchScreen')">Search</button>
+<button onclick="showScreen('councilScreen')">Council</button>
+<button onclick="showScreen('addScreen')">Add</button>
+<button onclick="showScreen('watchScreen');renderWatchlist()">Watchlist</button>
 </nav>
 
 <script>
-const storeKey = "smallholdingScoutWatchlist";
+const storeKey="smallholdingScoutWatchlist";
+let currentLinks=[];
 
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
+function showScreen(id){
+document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
 }
 
-function buildSearches() {
-  const pc = document.getElementById("postcode").value.trim();
-  const radius = document.getElementById("radius").value;
-  const acres = document.getElementById("acres").value;
-  const budget = document.getElementById("budget").value;
+function cleanPostcode(pc){return pc.toUpperCase().replace(/\s+/g," ").trim();}
 
-  const q = encodeURIComponent(`${pc} ${radius} ${acres} acres land smallholding grazing equestrian`);
-  const links = [
-    ["UK Land & Farms Derbyshire", "https://www.uklandandfarms.co.uk/rural-properties-for-sale/east-midlands/derbyshire/"],
-    ["UK Land & Farms Nottinghamshire", "https://www.uklandandfarms.co.uk/rural-properties-for-sale/east-midlands/nottinghamshire/"],
-    ["Bagshaws Land Search", "https://www.bagshaws.com/land-property-search/"],
-    ["Rightmove Land Search", `https://www.rightmove.co.uk/property-for-sale/find.html?searchType=SALE&keywords=land&locationIdentifier=POSTCODE%5E${encodeURIComponent(pc)}`],
-    ["OnTheMarket Farms & Land", "https://www.onthemarket.com/for-sale/farms-and-land/"],
-    ["Zoopla Farms & Land", "https://www.zoopla.co.uk/for-sale/farms-land/"],
-    ["Derbyshire Council Property", "https://www.derbyshire.gov.uk/business/property/estates/our-property-for-sale-or-to-let.aspx"],
-    ["Derbyshire Council Land Records", "https://www.derbyshire.gov.uk/environment/land-premises/council-land-property/council-land-and-property.aspx"],
-    ["Google Smart Search", `https://www.google.com/search?q=${q}`]
-  ];
+function runScout(){
+const pc=cleanPostcode(postcode.value);
+postcode.value=pc;
+const r=radius.value;
+const a=acres.value;
+const b=budget.value;
 
-  document.getElementById("searchLinks").classList.remove("hidden");
-  document.getElementById("searchLinks").innerHTML = `
-    <h2>Searches for ${pc}</h2>
-    <p class="small">Radius target: ${radius} · Min acres: ${acres} · Max budget: £${Number(budget).toLocaleString()}</p>
-    ${links.map(l => `<a class="btn" target="_blank" href="${l[1]}">${l[0]}</a>`).join("")}
-  `;
+const base=`${a}+acres+land+smallholding+grazing+equestrian+within+${r}+of+${encodeURIComponent(pc)}+under+${b}`;
+currentLinks=[
+["Google Smart Scout",`https://www.google.com/search?q=${base}`],
+["Bagshaws",`https://www.google.com/search?q=site%3Abagshaws.com+${base}`],
+["UK Land & Farms Derbyshire",`https://www.google.com/search?q=site%3Auklandandfarms.co.uk+Derbyshire+${base}`],
+["UK Land & Farms Nottinghamshire",`https://www.google.com/search?q=site%3Auklandandfarms.co.uk+Nottinghamshire+${base}`],
+["Rightmove Land",`https://www.google.com/search?q=site%3Arightmove.co.uk+land+${base}`],
+["OnTheMarket Farms & Land",`https://www.google.com/search?q=site%3Aonthemarket.com+farms+land+${base}`],
+["Zoopla Farms & Land",`https://www.google.com/search?q=site%3Azoopla.co.uk+farms+land+${base}`],
+["Derbyshire Council",`https://www.google.com/search?q=site%3Aderbyshire.gov.uk+land+farm+smallholding+to+let+sale`],
+["Nottinghamshire Council",`https://www.google.com/search?q=site%3Anottinghamshire.gov.uk+county+farm+smallholding+land+to+let`],
+["Auction Land",`https://www.google.com/search?q=auction+land+${base}+Derbyshire+Nottinghamshire`]
+];
+
+scoutResults.classList.remove("hidden");
+scoutResults.innerHTML=`
+<h2>Scout Search Results</h2>
+<p class="small">Search target: <b>${pc}</b> · ${r} · ${a}+ acres · max £${Number(b).toLocaleString()}</p>
+<p class="small">Tap each source. When you find a good listing, copy its link and save it in Watchlist.</p>
+${currentLinks.map(x=>`
+<div class="result">
+<h3>${x[0]}</h3>
+<a class="btn" target="_blank" href="${x[1]}">Open ${x[0]}</a>
+</div>`).join("")}
+`;
 }
 
-function calcScore(acres, price, notes) {
-  let score = 50;
-  if (acres >= 3) score += 10;
-  if (acres >= 5) score += 10;
-  if (price && acres) {
-    const ppa = price / acres;
-    if (ppa < 15000) score += 15;
-    else if (ppa < 25000) score += 8;
-  }
-  const n = notes.toLowerCase();
-  if (n.includes("water")) score += 5;
-  if (n.includes("road") || n.includes("access")) score += 5;
-  if (n.includes("stable") || n.includes("stables")) score += 5;
-  if (n.includes("fenc")) score += 5;
-  return Math.min(score, 100);
+function openAll(){
+if(!currentLinks.length) runScout();
+currentLinks.slice(0,5).forEach(x=>window.open(x[1],"_blank"));
 }
 
-function saveLand() {
-  const item = {
-    id: Date.now(),
-    title: title.value || "Untitled land",
-    location: location.value || "Unknown",
-    acres: Number(manualAcres.value || 0),
-    price: Number(price.value || 0),
-    link: link.value,
-    notes: notes.value,
-    date: new Date().toLocaleDateString()
-  };
-  item.score = calcScore(item.acres, item.price, item.notes);
-
-  const list = JSON.parse(localStorage.getItem(storeKey) || "[]");
-  list.unshift(item);
-  localStorage.setItem(storeKey, JSON.stringify(list));
-
-  title.value = location.value = link.value = notes.value = "";
-  showScreen("watchScreen");
-  renderWatchlist();
+function calcScore(acres,price,notes){
+let score=50;
+if(acres>=3)score+=10;
+if(acres>=5)score+=10;
+if(price&&acres){
+const ppa=price/acres;
+if(ppa<15000)score+=15;
+else if(ppa<25000)score+=8;
+}
+const n=(notes||"").toLowerCase();
+if(n.includes("water"))score+=5;
+if(n.includes("road")||n.includes("access"))score+=5;
+if(n.includes("stable"))score+=5;
+if(n.includes("fenc"))score+=5;
+return Math.min(score,100);
 }
 
-function renderWatchlist() {
-  const list = JSON.parse(localStorage.getItem(storeKey) || "[]");
-  const box = document.getElementById("watchlist");
-
-  if (!list.length) {
-    box.innerHTML = `<p class="small">No saved land yet. Add one from the Add screen.</p>`;
-    return;
-  }
-
-  box.innerHTML = list.map(item => `
-    <div class="card">
-      <div class="score">${item.score}/100</div>
-      <h3>${item.title}</h3>
-      <p><b>${item.location}</b></p>
-      <span class="pill">${item.acres} acres</span>
-      <span class="pill">£${Number(item.price).toLocaleString()}</span>
-      <span class="pill">£${item.acres ? Math.round(item.price / item.acres).toLocaleString() : 0}/acre</span>
-      <p class="small">${item.notes || "No notes yet."}</p>
-      ${item.link ? `<a class="btn" target="_blank" href="${item.link}">Open Listing</a>` : ""}
-      <button class="ghost" onclick="editNotes(${item.id})">Edit Notes</button>
-      <button class="danger" onclick="removeLand(${item.id})">Remove</button>
-    </div>
-  `).join("");
+function saveLand(){
+const item={
+id:Date.now(),
+title:title.value||"Untitled land",
+location:location.value||"Unknown",
+acres:Number(manualAcres.value||0),
+price:Number(price.value||0),
+link:link.value,
+notes:notes.value,
+date:new Date().toLocaleDateString()
+};
+item.score=calcScore(item.acres,item.price,item.notes);
+const list=JSON.parse(localStorage.getItem(storeKey)||"[]");
+list.unshift(item);
+localStorage.setItem(storeKey,JSON.stringify(list));
+title.value=location.value=link.value=notes.value="";
+showScreen("watchScreen");
+renderWatchlist();
 }
 
-function editNotes(id) {
-  const list = JSON.parse(localStorage.getItem(storeKey) || "[]");
-  const item = list.find(x => x.id === id);
-  const updated = prompt("Update notes:", item.notes || "");
-  if (updated === null) return;
-  item.notes = updated;
-  item.score = calcScore(item.acres, item.price, item.notes);
-  localStorage.setItem(storeKey, JSON.stringify(list));
-  renderWatchlist();
+function renderWatchlist(){
+const list=JSON.parse(localStorage.getItem(storeKey)||"[]");
+if(!list.length){watchlist.innerHTML='<p class="small">No saved land yet.</p>';return;}
+watchlist.innerHTML=list.map(item=>`
+<div class="card">
+<div class="score">${item.score}/100</div>
+<h3>${item.title}</h3>
+<p><b>${item.location}</b></p>
+<span class="pill">${item.acres} acres</span>
+<span class="pill">£${Number(item.price).toLocaleString()}</span>
+<span class="pill">£${item.acres?Math.round(item.price/item.acres).toLocaleString():0}/acre</span>
+<p class="small">${item.notes||"No notes yet."}</p>
+${item.link?`<a class="btn" target="_blank" href="${item.link}">Open Listing</a>`:""}
+<button class="danger" onclick="removeLand(${item.id})">Remove</button>
+</div>`).join("");
 }
 
-function removeLand(id) {
-  const list = JSON.parse(localStorage.getItem(storeKey) || "[]").filter(x => x.id !== id);
-  localStorage.setItem(storeKey, JSON.stringify(list));
-  renderWatchlist();
+function removeLand(id){
+const list=JSON.parse(localStorage.getItem(storeKey)||"[]").filter(x=>x.id!==id);
+localStorage.setItem(storeKey,JSON.stringify(list));
+renderWatchlist();
 }
 </script>
 </body>
