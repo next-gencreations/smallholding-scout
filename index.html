@@ -1,223 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Smallholding Scout</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#12251b">
+<title>Smallholding Scout V3</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#0d1712;color:#f4f1e8}
-header{padding:18px;background:#17241f;border-bottom:1px solid #2f473d}
-h1{margin:0;font-size:25px}.sub{color:#b8cbbf;margin-top:5px}
-.wrap{padding:14px;max-width:900px;margin:auto}
-.card{background:#18251f;border:1px solid #345044;border-radius:18px;padding:15px;margin-bottom:14px;box-shadow:0 8px 20px #0005}
-label{display:block;margin-top:10px;font-weight:bold;color:#d7e6dc}
-input,select,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #436456;background:#0d1512;color:white;font-size:16px;box-sizing:border-box}
-button,a.btn{display:block;text-align:center;border:0;border-radius:14px;padding:13px;margin:8px 0;background:#7bcf8c;color:#07120b;font-weight:bold;text-decoration:none;cursor:pointer}
-.ghost{background:#26382f;color:#e9fff0;border:1px solid #4d705f}
-.danger{background:#d96f6f;color:white}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.small{color:#b8cbbf;font-size:14px;line-height:1.4}
-.pill{display:inline-block;background:#24372f;padding:7px 10px;border-radius:999px;margin:4px 3px;color:#d7e6dc}
-.score{font-size:30px;font-weight:bold;color:#91f29e}
-nav{position:sticky;bottom:0;background:#101815;padding:8px;display:flex;gap:6px;border-top:1px solid #2f473d}
-nav button{flex:1;padding:11px 4px;font-size:13px}
-.hidden{display:none}
-.result{border:1px solid #3d5d50;border-radius:14px;padding:12px;margin-top:10px;background:#101c17}
-</style>
-</head>
+:root{--bg:#0b1510;--panel:#14231b;--panel2:#0f1c16;--line:#2f5140;--text:#f4f4ea;--muted:#b5c9bc;--green:#83d79a;--amber:#f1c96b;--red:#e47d7d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}header{padding:18px 16px;background:#12251b;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}h1{margin:0;font-size:24px}h2{margin:0 0 12px}h3{margin:10px 0}.sub,.small{color:var(--muted)}.sub{font-size:14px;margin-top:4px}.small{font-size:13px;line-height:1.45}.wrap{max-width:920px;margin:auto;padding:14px 14px 90px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:520px){.grid{grid-template-columns:1fr}}label{display:block;margin:10px 0 5px;font-weight:700}input,select,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #456a57;background:#09120e;color:#fff;font-size:16px}button,a.btn{width:100%;display:block;text-align:center;border:0;border-radius:13px;padding:13px;margin:8px 0;background:var(--green);color:#07120b;font-weight:800;text-decoration:none;cursor:pointer}.ghost{background:#263a30;color:#effff4;border:1px solid #4b715d}.danger{background:var(--red);color:#190707}.amber{background:var(--amber)}.pill{display:inline-block;background:#263a30;border:1px solid #395646;padding:6px 9px;border-radius:999px;margin:3px;font-size:13px}.score{font-size:30px;font-weight:900;color:#9cf3aa}.result{background:var(--panel2);border:1px solid #365847;border-radius:14px;padding:12px;margin:9px 0}.check{display:flex;align-items:center;gap:10px;padding:9px 0}.check input{width:22px;height:22px}.row{display:flex;gap:8px}.row>*{flex:1}.empty{text-align:center;padding:20px;color:var(--muted)}nav{position:fixed;bottom:0;left:0;right:0;display:flex;gap:4px;background:#0b1510ee;border-top:1px solid var(--line);padding:7px;z-index:10}nav button{margin:0;padding:10px 2px;font-size:12px}.hidden{display:none}.good{color:#9cf3aa}.warn{color:#ffd777}
+</style></head>
 <body>
-
-<header>
-<h1>🏡 Smallholding Scout V2</h1>
-<div class="sub">Scout land, grazing, woodland, council farms and smallholdings.</div>
-</header>
-
+<header><h1>🏡 Smallholding Scout V3</h1><div class="sub">Midlands land finder • council farms • auctions • horse suitability</div></header>
 <div class="wrap">
-
 <section id="searchScreen" class="screen">
-<div class="card">
-<h2>Search Area</h2>
-
-<label>Postcode</label>
-<input id="postcode" value="NG17 7JQ" />
-
-<div class="grid">
-<div>
-<label>Radius</label>
-<select id="radius">
-<option>10 miles</option>
-<option>20 miles</option>
-<option selected>30 miles</option>
-<option>50 miles</option>
-</select>
+<div class="card"><h2>🔎 Scout Search</h2>
+<label>Postcode</label><input id="postcode" value="NG17 7JQ" autocomplete="postal-code">
+<div class="grid"><div><label>Radius</label><select id="radius"><option>10 miles</option><option>20 miles</option><option selected>30 miles</option><option>40 miles</option><option>50 miles</option></select></div><div><label>Minimum acres</label><input id="acres" type="number" min="0" step=".1" value="4"></div></div>
+<label>Maximum budget £</label><input id="budget" type="number" min="0" value="200000">
+<div class="row"><button onclick="runScout()">Run Scout</button><button class="ghost" onclick="saveSearch()">⭐ Save</button></div>
 </div>
-<div>
-<label>Minimum Acres</label>
-<input id="acres" type="number" value="4" />
-</div>
-</div>
-
-<label>Max Budget</label>
-<input id="budget" type="number" value="200000" />
-
-<button onclick="runScout()">🔎 Run Scout Search</button>
-<button class="ghost" onclick="openAll()">🚀 Open Key Searches</button>
-</div>
-
+<div id="savedSearchBox" class="card"><h2>Saved Searches</h2><div id="savedSearches"></div></div>
 <div id="scoutResults" class="card hidden"></div>
 </section>
 
-<section id="councilScreen" class="screen hidden">
-<div class="card">
-<h2>🏛️ Council & Public Land Tracker</h2>
-<a class="btn" target="_blank" href="https://www.derbyshire.gov.uk/business/property/estates/our-property-for-sale-or-to-let.aspx">Derbyshire Property For Sale / To Let</a>
-<a class="btn" target="_blank" href="https://www.derbyshire.gov.uk/environment/land-premises/council-land-property/council-land-and-property.aspx">Derbyshire Council Land Records</a>
-<a class="btn" target="_blank" href="https://www.nottinghamshire.gov.uk/business-community/doing-business-with-us/land-and-property">Nottinghamshire Land & Property</a>
-<a class="btn" target="_blank" href="https://www.google.com/search?q=site%3A.gov.uk+Derbyshire+council+farm+tenancy+smallholding">Search Council Farm Tenancies</a>
-<p class="small">Council farms are often listed as tenancies, disposals, farms estate, rural estate or property to let.</p>
+<section id="trackerScreen" class="screen hidden">
+<div class="card"><h2>📋 Daily Search Tracker</h2><p class="small">Tick each source after checking it. The checklist resets itself on a new day.</p><div id="dailyChecks"></div><button class="ghost" onclick="resetChecks()">Reset today's checks</button></div>
+<div class="card"><h2>🏛️ Council & Public Land</h2>
+<a class="btn" target="_blank" rel="noopener" href="https://www.derbyshire.gov.uk/business/property/estates/our-property-for-sale-or-to-let.aspx">Derbyshire – property for sale/to let</a>
+<a class="btn" target="_blank" rel="noopener" href="https://www.derbyshire.gov.uk/environment/land-premises/council-land-property/council-land-and-property.aspx">Derbyshire – council land/property</a>
+<a class="btn" target="_blank" rel="noopener" href="https://www.nottinghamshire.gov.uk/business-community/doing-business-with-us/land-and-property">Nottinghamshire – land/property</a>
+<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/search?q=site%3Aderbyshire.gov.uk+farm+tenancy+smallholding+land+to+let">Derbyshire tenancy search</a>
+<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/search?q=site%3Anottinghamshire.gov.uk+county+farm+smallholding+land+to+let">Nottinghamshire county farm search</a>
 </div>
+<div class="card"><h2>🔨 Auction Scout</h2><button onclick="openAuctionSearch()">Search local land auctions</button><p class="small">Targets Derbyshire, Nottinghamshire and nearby East Midlands land/smallholding auctions.</p></div>
 </section>
 
 <section id="addScreen" class="screen hidden">
-<div class="card">
-<h2>Add Land Manually</h2>
-<label>Title</label><input id="title" placeholder="5 acres grazing land" />
-<label>Location</label><input id="location" placeholder="Matlock / Mansfield / Ashbourne" />
+<div class="card"><h2>➕ Add a Listing</h2>
+<label>Title</label><input id="landTitle" placeholder="5 acre paddock">
+<label>Location</label><input id="landLocation" placeholder="Matlock">
+<div class="grid"><div><label>Acres</label><input id="landAcres" type="number" step=".1" value="5"></div><div><label>Price £</label><input id="landPrice" type="number" value="75000"></div></div>
+<label>Listing link</label><input id="landLink" type="url" placeholder="https://...">
+<h3>🐴 Horse suitability</h3>
 <div class="grid">
-<div><label>Acres</label><input id="manualAcres" type="number" value="5" /></div>
-<div><label>Price £</label><input id="price" type="number" value="75000" /></div>
+<label class="check"><input id="water" type="checkbox"> Water</label>
+<label class="check"><input id="fencing" type="checkbox"> Fencing</label>
+<label class="check"><input id="access" type="checkbox"> Road access</label>
+<label class="check"><input id="shelter" type="checkbox"> Shelter/stables</label>
+<label class="check"><input id="level" type="checkbox"> Usable grazing</label>
+<label class="check"><input id="parking" type="checkbox"> Trailer parking</label>
 </div>
-<label>Listing Link</label><input id="link" placeholder="Paste listing link" />
-<label>Notes</label><textarea id="notes" rows="4" placeholder="Water, road access, fencing, stables..."></textarea>
-<button onclick="saveLand()">⭐ Save Land</button>
-</div>
+<label>Notes</label><textarea id="landNotes" rows="4" placeholder="Drainage, planning, rights of way, services, viewing notes..."></textarea>
+<button onclick="saveLand()">Save to Watchlist</button></div>
 </section>
 
-<section id="watchScreen" class="screen hidden">
-<div class="card">
-<h2>⭐ Watchlist</h2>
-<div id="watchlist"></div>
+<section id="watchScreen" class="screen hidden"><div class="card"><h2>⭐ Watchlist</h2><div id="watchlist"></div></div></section>
 </div>
-</section>
-
-</div>
-
-<nav>
-<button onclick="showScreen('searchScreen')">Search</button>
-<button onclick="showScreen('councilScreen')">Council</button>
-<button onclick="showScreen('addScreen')">Add</button>
-<button onclick="showScreen('watchScreen');renderWatchlist()">Watchlist</button>
-</nav>
+<nav><button onclick="showScreen('searchScreen')">🔎<br>Search</button><button onclick="showScreen('trackerScreen');renderChecks()">📋<br>Tracker</button><button onclick="showScreen('addScreen')">➕<br>Add</button><button onclick="showScreen('watchScreen');renderWatchlist()">⭐<br>Watchlist</button></nav>
 
 <script>
-const storeKey="smallholdingScoutWatchlist";
+const K={watch:"ss_watch_v3",search:"ss_search_v3",checks:"ss_checks_v3"};
+const sources=["Bagshaws","UK Land & Farms Derbyshire","UK Land & Farms Nottinghamshire","Rightmove","OnTheMarket","Zoopla","Derbyshire Council","Nottinghamshire Council","Auctions"];
 let currentLinks=[];
-
-function showScreen(id){
-document.querySelectorAll(".screen").forEach(s=>s.classList.add("hidden"));
-document.getElementById(id).classList.remove("hidden");
-}
-
-function cleanPostcode(pc){return pc.toUpperCase().replace(/\s+/g," ").trim();}
-
-function runScout(){
-const pc=cleanPostcode(postcode.value);
-postcode.value=pc;
-const r=radius.value;
-const a=acres.value;
-const b=budget.value;
-
-const base=`${a}+acres+land+smallholding+grazing+equestrian+within+${r}+of+${encodeURIComponent(pc)}+under+${b}`;
-currentLinks=[
-["Google Smart Scout",`https://www.google.com/search?q=${base}`],
-["Bagshaws",`https://www.google.com/search?q=site%3Abagshaws.com+${base}`],
-["UK Land & Farms Derbyshire",`https://www.google.com/search?q=site%3Auklandandfarms.co.uk+Derbyshire+${base}`],
-["UK Land & Farms Nottinghamshire",`https://www.google.com/search?q=site%3Auklandandfarms.co.uk+Nottinghamshire+${base}`],
-["Rightmove Land",`https://www.google.com/search?q=site%3Arightmove.co.uk+land+${base}`],
-["OnTheMarket Farms & Land",`https://www.google.com/search?q=site%3Aonthemarket.com+farms+land+${base}`],
-["Zoopla Farms & Land",`https://www.google.com/search?q=site%3Azoopla.co.uk+farms+land+${base}`],
+const $=id=>document.getElementById(id);
+function showScreen(id){document.querySelectorAll(".screen").forEach(x=>x.classList.add("hidden"));$(id).classList.remove("hidden")}
+function cleanPC(v){v=v.toUpperCase().replace(/[^A-Z0-9]/g,"");return v.length>3?v.slice(0,-3)+" "+v.slice(-3):v}
+function searchData(){return{pc:cleanPC($("postcode").value),radius:$("radius").value,acres:Number($("acres").value||0),budget:Number($("budget").value||0)}}
+function makeLinks(d){const q=encodeURIComponent(`${d.acres}+acres land smallholding grazing equestrian ${d.pc} ${d.radius} under £${d.budget}`);return[
+["Google Smart Scout",`https://www.google.com/search?q=${q}`],
+["Bagshaws",`https://www.google.com/search?q=site%3Abagshaws.com+${q}`],
+["UK Land & Farms – Derbyshire",`https://www.google.com/search?q=site%3Auklandandfarms.co.uk+Derbyshire+${q}`],
+["UK Land & Farms – Nottinghamshire",`https://www.google.com/search?q=site%3Auklandandfarms.co.uk+Nottinghamshire+${q}`],
+["Rightmove land",`https://www.google.com/search?q=site%3Arightmove.co.uk+land+${q}`],
+["OnTheMarket farms & land",`https://www.google.com/search?q=site%3Aonthemarket.com+land+${q}`],
+["Zoopla farms & land",`https://www.google.com/search?q=site%3Azoopla.co.uk+land+${q}`],
 ["Derbyshire Council",`https://www.google.com/search?q=site%3Aderbyshire.gov.uk+land+farm+smallholding+to+let+sale`],
 ["Nottinghamshire Council",`https://www.google.com/search?q=site%3Anottinghamshire.gov.uk+county+farm+smallholding+land+to+let`],
-["Auction Land",`https://www.google.com/search?q=auction+land+${base}+Derbyshire+Nottinghamshire`]
-];
-
-scoutResults.classList.remove("hidden");
-scoutResults.innerHTML=`
-<h2>Scout Search Results</h2>
-<p class="small">Search target: <b>${pc}</b> · ${r} · ${a}+ acres · max £${Number(b).toLocaleString()}</p>
-<p class="small">Tap each source. When you find a good listing, copy its link and save it in Watchlist.</p>
-${currentLinks.map(x=>`
-<div class="result">
-<h3>${x[0]}</h3>
-<a class="btn" target="_blank" href="${x[1]}">Open ${x[0]}</a>
-</div>`).join("")}
-`;
-}
-
-function openAll(){
-if(!currentLinks.length) runScout();
-currentLinks.slice(0,5).forEach(x=>window.open(x[1],"_blank"));
-}
-
-function calcScore(acres,price,notes){
-let score=50;
-if(acres>=3)score+=10;
-if(acres>=5)score+=10;
-if(price&&acres){
-const ppa=price/acres;
-if(ppa<15000)score+=15;
-else if(ppa<25000)score+=8;
-}
-const n=(notes||"").toLowerCase();
-if(n.includes("water"))score+=5;
-if(n.includes("road")||n.includes("access"))score+=5;
-if(n.includes("stable"))score+=5;
-if(n.includes("fenc"))score+=5;
-return Math.min(score,100);
-}
-
-function saveLand(){
-const item={
-id:Date.now(),
-title:title.value||"Untitled land",
-location:location.value||"Unknown",
-acres:Number(manualAcres.value||0),
-price:Number(price.value||0),
-link:link.value,
-notes:notes.value,
-date:new Date().toLocaleDateString()
-};
-item.score=calcScore(item.acres,item.price,item.notes);
-const list=JSON.parse(localStorage.getItem(storeKey)||"[]");
-list.unshift(item);
-localStorage.setItem(storeKey,JSON.stringify(list));
-title.value=location.value=link.value=notes.value="";
-showScreen("watchScreen");
-renderWatchlist();
-}
-
-function renderWatchlist(){
-const list=JSON.parse(localStorage.getItem(storeKey)||"[]");
-if(!list.length){watchlist.innerHTML='<p class="small">No saved land yet.</p>';return;}
-watchlist.innerHTML=list.map(item=>`
-<div class="card">
-<div class="score">${item.score}/100</div>
-<h3>${item.title}</h3>
-<p><b>${item.location}</b></p>
-<span class="pill">${item.acres} acres</span>
-<span class="pill">£${Number(item.price).toLocaleString()}</span>
-<span class="pill">£${item.acres?Math.round(item.price/item.acres).toLocaleString():0}/acre</span>
-<p class="small">${item.notes||"No notes yet."}</p>
-${item.link?`<a class="btn" target="_blank" href="${item.link}">Open Listing</a>`:""}
-<button class="danger" onclick="removeLand(${item.id})">Remove</button>
-</div>`).join("");
-}
-
-function removeLand(id){
-const list=JSON.parse(localStorage.getItem(storeKey)||"[]").filter(x=>x.id!==id);
-localStorage.setItem(storeKey,JSON.stringify(list));
-renderWatchlist();
-}
-</script>
-</body>
-</html>
+["Local auctions",`https://www.google.com/search?q=${q}+auction+Derbyshire+Nottinghamshire`]]}
+function runScout(){const d=searchData();$("postcode").value=d.pc;currentLinks=makeLinks(d);$("scoutResults").classList.remove("hidden");$("scoutResults").innerHTML=`<h2>Results Hub</h2><p class="small"><b>${d.pc}</b> • ${d.radius} • ${d.acres}+ acres • up to £${d.budget.toLocaleString()}</p><p class="small">V3 searches each source with your criteria. Listings still open at the source; automatic ingestion will require a server-side source connector.</p>${currentLinks.map(x=>`<div class="result"><b>${x[0]}</b><a class="btn" target="_blank" rel="noopener" href="${x[1]}">Search this source</a></div>`).join("")}`}
+function saveSearch(){const d=searchData(),list=JSON.parse(localStorage.getItem(K.search)||"[]");if(!list.some(x=>x.pc===d.pc&&x.radius===d.radius&&x.acres===d.acres&&x.budget===d.budget))list.unshift({...d,id:Date.now()});localStorage.setItem(K.search,JSON.stringify(list));renderSavedSearches()}
+function renderSavedSearches(){const list=JSON.parse(localStorage.getItem(K.search)||"[]");$("savedSearches").innerHTML=list.length?list.map(x=>`<div class="result"><b>${x.pc}</b> • ${x.radius} • ${x.acres}+ acres • £${x.budget.toLocaleString()}<div class="row"><button onclick="loadSearch(${x.id})">Run</button><button class="danger" onclick="deleteSearch(${x.id})">Delete</button></div></div>`).join(""):'<div class="empty">No saved searches yet.</div>'}
+function loadSearch(id){const x=JSON.parse(localStorage.getItem(K.search)||"[]").find(y=>y.id===id);if(!x)return;$("postcode").value=x.pc;$("radius").value=x.radius;$("acres").value=x.acres;$("budget").value=x.budget;runScout()}
+function deleteSearch(id){localStorage.setItem(K.search,JSON.stringify(JSON.parse(localStorage.getItem(K.search)||"[]").filter(x=>x.id!==id)));renderSavedSearches()}
+function dayKey(){return new Date().toISOString().slice(0,10)}
+function getChecks(){let x=JSON.parse(localStorage.getItem(K.checks)||"null");if(!x||x.date!==dayKey())x={date:dayKey(),done:{}};return x}
+function renderChecks(){const x=getChecks();localStorage.setItem(K.checks,JSON.stringify(x));$("dailyChecks").innerHTML=sources.map((s,i)=>`<label class="check"><input type="checkbox" ${x.done[i]?"checked":""} onchange="toggleCheck(${i},this.checked)"> <span>${s}</span></label>`).join("")}
+function toggleCheck(i,v){const x=getChecks();x.done[i]=v;localStorage.setItem(K.checks,JSON.stringify(x))}
+function resetChecks(){localStorage.setItem(K.checks,JSON.stringify({date:dayKey(),done:{}}));renderChecks()}
+function openAuctionSearch(){const d=searchData();window.open(`https://www.google.com/search?q=${encodeURIComponent(d.acres+" acres land auction Derbyshire Nottinghamshire smallholding")}`,"_blank")}
+function horseScore(i){let s=0;["water","fencing","access","shelter","level","parking"].forEach(k=>{if(i[k])s+=10});return Math.min(100,40+s)}
+function saveLand(){const i={id:Date.now(),title:$("landTitle").value||"Untitled land",location:$("landLocation").value||"Unknown",acres:Number($("landAcres").value||0),price:Number($("landPrice").value||0),link:$("landLink").value,notes:$("landNotes").value,water:$("water").checked,fencing:$("fencing").checked,access:$("access").checked,shelter:$("shelter").checked,level:$("level").checked,parking:$("parking").checked};i.horse=horseScore(i);const l=JSON.parse(localStorage.getItem(K.watch)||"[]");l.unshift(i);localStorage.setItem(K.watch,JSON.stringify(l));["landTitle","landLocation","landLink","landNotes"].forEach(id=>$(id).value="");["water","fencing","access","shelter","level","parking"].forEach(id=>$(id).checked=false);showScreen("watchScreen");renderWatchlist()}
+function renderWatchlist(){const l=JSON.parse(localStorage.getItem(K.watch)||"[]");$("watchlist").innerHTML=l.length?l.map(i=>{const ppa=i.acres?Math.round(i.price/i.acres):0;return`<div class="result"><div class="score">🐴 ${i.horse}/100</div><h3>${i.title}</h3><div class="small"><b>${i.location}</b></div><span class="pill">${i.acres} acres</span><span class="pill">£${i.price.toLocaleString()}</span><span class="pill">£${ppa.toLocaleString()}/acre</span><p class="small">${i.notes||"No notes yet."}</p>${i.link?`<a class="btn" target="_blank" rel="noopener" href="${i.link}">Open listing</a>`:""}<button class="danger" onclick="removeLand(${i.id})">Remove</button></div>`}).join(""):'<div class="empty">No saved land yet.</div>'}
+function removeLand(id){localStorage.setItem(K.watch,JSON.stringify(JSON.parse(localStorage.getItem(K.watch)||"[]").filter(x=>x.id!==id)));renderWatchlist()}
+renderSavedSearches();
+</script></body></html>
