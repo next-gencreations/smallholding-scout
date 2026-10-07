@@ -79,22 +79,18 @@ function makeLinks(d){const q=encodeURIComponent(`${d.acres}+acres land smallhol
 async function runLiveScout(){
  const box=$("liveScout");box.classList.remove("hidden");box.innerHTML='<h2>📡 Live Scout</h2><p class="small">Checking live source pages…</p>';
  try{
-  const r=await fetch("/api/scout");if(!r.ok)throw new Error("Scout API "+r.status);const d=await r.json();
-  const target=searchData();
-  box.innerHTML='<h2>📡 Live Scout</h2><p class="small">Last checked: '+new Date(d.checkedAt).toLocaleString()+' • target '+target.acres+'+ acres • max £'+target.budget.toLocaleString()+'</p>'+
-  d.results.map(s=>{
-   const prices=(s.signals&&s.signals.prices||[]).filter(x=>x<=target.budget);
-   const acresFound=(s.signals&&s.signals.acres||[]).filter(x=>x>=target.acres);
-   let state=s.ok?'Source reached':'Source unavailable';
-   if(s.noAvailability)state='No council properties currently listed';
-   else if(prices.length||acresFound.length)state='Possible matches detected';
-   return '<div class="result"><b>'+s.name+'</b><p class="small '+(s.ok?'good':'warn')+'">'+state+'</p>'+
-    (prices.length?'<span class="pill">Prices ≤ budget: '+prices.slice(0,5).map(x=>'£'+x.toLocaleString()).join(', ')+'</span>':'')+
-    (acresFound.length?'<span class="pill">Acre signals: '+acresFound.slice(0,5).join(', ')+'</span>':'')+
-    '<a class="btn" target="_blank" rel="noopener" href="'+s.url+'">Open source</a></div>'
-  }).join("");
- }catch(e){box.innerHTML='<h2>📡 Live Scout</h2><p class="warn">Live source check is not available yet. Vercel may still be deploying the new API.</p><p class="small">'+e.message+'</p>'}
+  const r=await fetch("/api/scout");if(!r.ok)throw new Error("Scout API "+r.status);const d=await r.json(),target=searchData();
+  const seen=JSON.parse(localStorage.getItem("ss_seen_live")||"[]"), seenSet=new Set(seen);
+  const matches=(d.listings||[]).filter(x=>x.price<=target.budget&&(!x.acres||x.acres>=target.acres));
+  const ranked=matches.sort((a,b)=>(b.acres||0)-(a.acres||0)||a.price-b.price);
+  box.innerHTML='<h2>📡 Live Scout</h2><p class="small">Checked '+new Date(d.checkedAt).toLocaleString()+' • '+ranked.length+' candidate(s) within budget'+(ranked.some(x=>x.acres)?' / acreage filter':'')+'. <b>NEW</b> means not seen on this device before.</p>'+
+   (ranked.length?ranked.slice(0,30).map(x=>{const fresh=!seenSet.has(x.id);return '<div class="result">'+(fresh?'<span class="pill good">NEW</span>':'<span class="pill">Seen</span>')+' <span class="pill">'+x.source+'</span><h3>£'+x.price.toLocaleString()+(x.acres?' • '+x.acres+' acres':'')+'</h3><p class="small">'+escapeHtml(x.title)+'</p><a class="btn" target="_blank" rel="noopener" href="'+x.url+'">Open source</a></div>'}).join(""):'<div class="empty">No extracted candidates currently match this budget. Use the source searches below as a fallback.</div>')+
+   '<h3>Source status</h3>'+d.results.map(s=>'<div class="small">'+(s.ok?'✅':'⚠️')+' '+s.name+' • '+s.count+' candidate signals'+(s.noAvailability?' • none currently advertised':'')+'</div>').join("");
+  localStorage.setItem("ss_seen_live",JSON.stringify([...new Set(seen.concat((d.listings||[]).map(x=>x.id)))].slice(-1000)));
+ }catch(e){box.innerHTML='<h2>📡 Live Scout</h2><p class="warn">Live Scout could not reach the backend yet.</p><p class="small">'+escapeHtml(e.message)+'</p>'}
 }
+function escapeHtml(v){return String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
 function runScout(){const d=searchData();$("postcode").value=d.pc;currentLinks=makeLinks(d);$("scoutResults").classList.remove("hidden");$("scoutResults").innerHTML=`<h2>Results Hub</h2><p class="small"><b>${d.pc}</b> • ${d.radius} • ${d.acres}+ acres • up to £${d.budget.toLocaleString()}</p><p class="small">V3 searches each source with your criteria. Listings still open at the source; automatic ingestion will require a server-side source connector.</p>${currentLinks.map(x=>`<div class="result"><b>${x[0]}</b><a class="btn" target="_blank" rel="noopener" href="${x[1]}">Search this source</a></div>`).join("")}`}
 function saveSearch(){const d=searchData(),list=JSON.parse(localStorage.getItem(K.search)||"[]");if(!list.some(x=>x.pc===d.pc&&x.radius===d.radius&&x.acres===d.acres&&x.budget===d.budget))list.unshift({...d,id:Date.now()});localStorage.setItem(K.search,JSON.stringify(list));renderSavedSearches()}
 function renderSavedSearches(){const list=JSON.parse(localStorage.getItem(K.search)||"[]");$("savedSearches").innerHTML=list.length?list.map(x=>`<div class="result"><b>${x.pc}</b> • ${x.radius} • ${x.acres}+ acres • £${x.budget.toLocaleString()}<div class="row"><button onclick="loadSearch(${x.id})">Run</button><button class="danger" onclick="deleteSearch(${x.id})">Delete</button></div></div>`).join(""):'<div class="empty">No saved searches yet.</div>'}
