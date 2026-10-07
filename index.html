@@ -16,10 +16,10 @@
 <label>Postcode</label><input id="postcode" value="NG17 7JQ" autocomplete="postal-code">
 <div class="grid"><div><label>Radius</label><select id="radius"><option>10 miles</option><option>20 miles</option><option selected>30 miles</option><option>40 miles</option><option>50 miles</option></select></div><div><label>Minimum acres</label><input id="acres" type="number" min="0" step=".1" value="4"></div></div>
 <label>Maximum budget £</label><input id="budget" type="number" min="0" value="200000">
-<div class="row"><button onclick="runScout()">Run Scout</button><button class="ghost" onclick="saveSearch()">⭐ Save</button></div>
+<div class="row"><button onclick="runScout()">Run Scout</button><button class="ghost" onclick="saveSearch()">⭐ Save</button></div><button class="amber" onclick="runLiveScout()">📡 Live Scout Sources</button>
 </div>
 <div id="savedSearchBox" class="card"><h2>Saved Searches</h2><div id="savedSearches"></div></div>
-<div id="scoutResults" class="card hidden"></div>
+<div id="liveScout" class="card hidden"></div><div id="scoutResults" class="card hidden"></div>
 </section>
 
 <section id="trackerScreen" class="screen hidden">
@@ -76,6 +76,25 @@ function makeLinks(d){const q=encodeURIComponent(`${d.acres}+acres land smallhol
 ["Derbyshire Council",`https://www.google.com/search?q=site%3Aderbyshire.gov.uk+land+farm+smallholding+to+let+sale`],
 ["Nottinghamshire Council",`https://www.google.com/search?q=site%3Anottinghamshire.gov.uk+county+farm+smallholding+land+to+let`],
 ["Local auctions",`https://www.google.com/search?q=${q}+auction+Derbyshire+Nottinghamshire`]]}
+async function runLiveScout(){
+ const box=$("liveScout");box.classList.remove("hidden");box.innerHTML='<h2>📡 Live Scout</h2><p class="small">Checking live source pages…</p>';
+ try{
+  const r=await fetch("/api/scout");if(!r.ok)throw new Error("Scout API "+r.status);const d=await r.json();
+  const target=searchData();
+  box.innerHTML='<h2>📡 Live Scout</h2><p class="small">Last checked: '+new Date(d.checkedAt).toLocaleString()+' • target '+target.acres+'+ acres • max £'+target.budget.toLocaleString()+'</p>'+
+  d.results.map(s=>{
+   const prices=(s.signals&&s.signals.prices||[]).filter(x=>x<=target.budget);
+   const acresFound=(s.signals&&s.signals.acres||[]).filter(x=>x>=target.acres);
+   let state=s.ok?'Source reached':'Source unavailable';
+   if(s.noAvailability)state='No council properties currently listed';
+   else if(prices.length||acresFound.length)state='Possible matches detected';
+   return '<div class="result"><b>'+s.name+'</b><p class="small '+(s.ok?'good':'warn')+'">'+state+'</p>'+
+    (prices.length?'<span class="pill">Prices ≤ budget: '+prices.slice(0,5).map(x=>'£'+x.toLocaleString()).join(', ')+'</span>':'')+
+    (acresFound.length?'<span class="pill">Acre signals: '+acresFound.slice(0,5).join(', ')+'</span>':'')+
+    '<a class="btn" target="_blank" rel="noopener" href="'+s.url+'">Open source</a></div>'
+  }).join("");
+ }catch(e){box.innerHTML='<h2>📡 Live Scout</h2><p class="warn">Live source check is not available yet. Vercel may still be deploying the new API.</p><p class="small">'+e.message+'</p>'}
+}
 function runScout(){const d=searchData();$("postcode").value=d.pc;currentLinks=makeLinks(d);$("scoutResults").classList.remove("hidden");$("scoutResults").innerHTML=`<h2>Results Hub</h2><p class="small"><b>${d.pc}</b> • ${d.radius} • ${d.acres}+ acres • up to £${d.budget.toLocaleString()}</p><p class="small">V3 searches each source with your criteria. Listings still open at the source; automatic ingestion will require a server-side source connector.</p>${currentLinks.map(x=>`<div class="result"><b>${x[0]}</b><a class="btn" target="_blank" rel="noopener" href="${x[1]}">Search this source</a></div>`).join("")}`}
 function saveSearch(){const d=searchData(),list=JSON.parse(localStorage.getItem(K.search)||"[]");if(!list.some(x=>x.pc===d.pc&&x.radius===d.radius&&x.acres===d.acres&&x.budget===d.budget))list.unshift({...d,id:Date.now()});localStorage.setItem(K.search,JSON.stringify(list));renderSavedSearches()}
 function renderSavedSearches(){const list=JSON.parse(localStorage.getItem(K.search)||"[]");$("savedSearches").innerHTML=list.length?list.map(x=>`<div class="result"><b>${x.pc}</b> • ${x.radius} • ${x.acres}+ acres • £${x.budget.toLocaleString()}<div class="row"><button onclick="loadSearch(${x.id})">Run</button><button class="danger" onclick="deleteSearch(${x.id})">Delete</button></div></div>`).join(""):'<div class="empty">No saved searches yet.</div>'}
